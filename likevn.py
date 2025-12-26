@@ -1,6 +1,6 @@
 import os, sys, time, requests
 
-TOKEN_FILE = "api_token2.txt"
+TOKEN_FILE = "api_token_likevn.txt"
 DELAY_SECONDS = 180
 
 try:
@@ -47,11 +47,15 @@ def _post_order(token, url, data):
         "Referer": "https://like.vn/",
         "api-token": token
     }
-    r = requests.post(url, headers=headers, data=data, timeout=30)
     try:
+        r = requests.post(url, headers=headers, data=data, timeout=30)
         return r.status_code, r.json()
-    except Exception:
-        return r.status_code, {"status":"error","message":"Phản hồi không phải JSON"}
+    except requests.exceptions.Timeout:
+        return 500, {"status": "error", "message": "Request timeout"}
+    except requests.exceptions.RequestException as e:
+        return 500, {"status": "error", "message": f"Request error: {str(e)}"}
+    except Exception as e:
+        return r.status_code if 'r' in locals() else 500, {"status": "error", "message": "Invalid response format"}
 
 def clear_console():
     os.system("cls" if os.name == "nt" else "clear")

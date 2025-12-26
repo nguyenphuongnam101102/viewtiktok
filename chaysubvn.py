@@ -6,7 +6,7 @@ from colorama import init, Fore
 init(autoreset=True)
 
 API_URL = "https://chaysub.vn/api/v1/order"
-TOKEN_FILE = "api_token3.txt"
+TOKEN_FILE = "api_token_chaysub.txt"
 
 total_view = 0
 success_count = 0
@@ -48,8 +48,12 @@ def create_order(object_id, api_token):
     try:
         resp = requests.post(API_URL, headers=headers, data=data, timeout=30)
         return resp.status_code, resp.json()
+    except requests.exceptions.Timeout:
+        return 500, {"status": "error", "message": "Request timeout"}
+    except requests.exceptions.RequestException as e:
+        return 500, {"status": "error", "message": f"Request error: {str(e)}"}
     except Exception as e:
-        return 500, {"status": "error", "message": str(e)}
+        return 500, {"status": "error", "message": f"Unexpected error: {str(e)}"}
 
 def countdown(sec):
     while sec > 0:
