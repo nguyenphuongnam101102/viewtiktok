@@ -36,10 +36,10 @@ def send_request(url, headers, payload):
         return r.json()
     except requests.exceptions.Timeout:
         return {"status": "error", "message": "Request timeout"}
-    except requests.exceptions.RequestException as e:
-        return {"status": "error", "message": f"Request error: {str(e)}"}
-    except Exception as e:
-        return {"status": "error", "message": f"Unexpected error: {str(e)}"}
+    except requests.exceptions.RequestException:
+        return {"status": "error", "message": "Connection error"}
+    except ValueError:
+        return {"status": "error", "message": "Invalid response format"}
 
 def animate_in_progress(success, total, duration=120):
     dots = itertools.cycle(["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"])

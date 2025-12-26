@@ -49,13 +49,14 @@ def _post_order(token, url, data):
     }
     try:
         r = requests.post(url, headers=headers, data=data, timeout=30)
-        return r.status_code, r.json()
+        try:
+            return r.status_code, r.json()
+        except ValueError:
+            return r.status_code, {"status": "error", "message": "Invalid response format"}
     except requests.exceptions.Timeout:
         return 500, {"status": "error", "message": "Request timeout"}
-    except requests.exceptions.RequestException as e:
-        return 500, {"status": "error", "message": f"Request error: {str(e)}"}
-    except Exception as e:
-        return r.status_code if 'r' in locals() else 500, {"status": "error", "message": "Invalid response format"}
+    except requests.exceptions.RequestException:
+        return 500, {"status": "error", "message": "Connection error"}
 
 def clear_console():
     os.system("cls" if os.name == "nt" else "clear")

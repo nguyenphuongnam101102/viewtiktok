@@ -50,10 +50,10 @@ def create_order(object_id, api_token):
         return resp.status_code, resp.json()
     except requests.exceptions.Timeout:
         return 500, {"status": "error", "message": "Request timeout"}
-    except requests.exceptions.RequestException as e:
-        return 500, {"status": "error", "message": f"Request error: {str(e)}"}
-    except Exception as e:
-        return 500, {"status": "error", "message": f"Unexpected error: {str(e)}"}
+    except requests.exceptions.RequestException:
+        return 500, {"status": "error", "message": "Connection error"}
+    except ValueError:
+        return 500, {"status": "error", "message": "Invalid response format"}
 
 def countdown(sec):
     while sec > 0:
