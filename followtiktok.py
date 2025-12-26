@@ -17,25 +17,29 @@ for module in ["requests"]:
 
 success_count = 0
 total_follow = 0
-TOKEN_FILE = "api_token2.txt"
+TOKEN_FILE = "api_token_likevn.txt"
 
 def get_api_token():
     if os.path.exists(TOKEN_FILE):
-        with open(TOKEN_FILE, "r") as f:
+        with open(TOKEN_FILE, "r", encoding="utf-8") as f:
             token = f.read().strip()
         if token:
             return token
     token = input("Nhập API Token (lấy tại https://like.vn/docs/api): ").strip()
-    with open(TOKEN_FILE, "w") as f:
+    with open(TOKEN_FILE, "w", encoding="utf-8") as f:
         f.write(token)
     return token
 
 def send_request(url, headers, payload):
     try:
-        r = requests.post(url, headers=headers, data=payload)
+        r = requests.post(url, headers=headers, data=payload, timeout=30)
         return r.json()
-    except:
-        return {"status": "error"}
+    except requests.exceptions.Timeout:
+        return {"status": "error", "message": "Request timeout"}
+    except requests.exceptions.RequestException:
+        return {"status": "error", "message": "Connection error"}
+    except ValueError:
+        return {"status": "error", "message": "Response is not valid JSON format"}
 
 def animate_in_progress(success, total, duration=120):
     dots = itertools.cycle(["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"])
