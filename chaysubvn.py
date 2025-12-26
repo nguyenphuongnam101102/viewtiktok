@@ -53,7 +53,7 @@ def create_order(object_id, api_token):
     except requests.exceptions.RequestException:
         return 500, {"status": "error", "message": "Connection error"}
     except ValueError:
-        return 500, {"status": "error", "message": "Invalid response format"}
+        return 500, {"status": "error", "message": "Response is not valid JSON format"}
 
 def countdown(sec):
     while sec > 0:

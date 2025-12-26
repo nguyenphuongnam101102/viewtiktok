@@ -39,7 +39,7 @@ def send_request(url, headers, payload):
     except requests.exceptions.RequestException:
         return {"status": "error", "message": "Connection error"}
     except ValueError:
-        return {"status": "error", "message": "Invalid response format"}
+        return {"status": "error", "message": "Response is not valid JSON format"}
 
 def animate_in_progress(success, total, duration=120):
     dots = itertools.cycle(["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"])

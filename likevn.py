@@ -52,7 +52,7 @@ def _post_order(token, url, data):
         try:
             return r.status_code, r.json()
         except ValueError:
-            return r.status_code, {"status": "error", "message": "Invalid response format"}
+            return r.status_code, {"status": "error", "message": "Response is not valid JSON format"}
     except requests.exceptions.Timeout:
         return 500, {"status": "error", "message": "Request timeout"}
     except requests.exceptions.RequestException:
